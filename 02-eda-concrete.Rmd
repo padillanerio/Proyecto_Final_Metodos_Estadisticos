@@ -29,9 +29,9 @@ library(rstatix)
 
 ## Carga de Datos
 
-```{r eda-summary, eval=FALSE}
+```{r eda-summary}
 Concrete_Data <- read_excel("concrete+compressive+strength/Concrete_Data.xls")
-View(Concrete_Data)
+# View(Concrete_Data)
 
 df <- Concrete_Data
 ```
@@ -159,9 +159,8 @@ df_clean |>
   ) +
   theme_bw()
 ```
-La distribución es fuertemente bimodal e inflada en ceros. Presenta una concentración masiva en los $0\text{ kg/m}^3$ correspondiente a las mezclas tradicionales de control ($55\%$ de la muestra), seguida de un segundo agrupamiento entre los $80$ y $160\text{ kg/m}^3$ en aquellas formulaciones donde sí se sustituyó cemento por ceniza. Esta notable asimetría y falta de continuidad confirma la **no normalidad** de la variabl.
+La distribución es fuertemente bimodal e inflada en ceros. Presenta una concentración masiva en los $0\text{ kg/m}^3$ correspondiente a las mezclas tradicionales de control ($55\%$ de la muestra), seguida de un segundo agrupamiento entre los $80$ y $160\text{ kg/m}^3$ en aquellas formulaciones donde sí se sustituyó cemento por ceniza. Esta notable asimetría y falta de continuidad confirma la **no normalidad** de la variable.
 
----
 ```{r}
 df_clean |>
   ggplot(aes(x = edad)) +
@@ -247,7 +246,7 @@ p5 <- df %>%
 ```{r}
 p3
 ```
-Para la variable independiente "Cemento", se observa un comportamiento homogéneo y balanceado, sin valores atipicos, con un promedio de cemento en la mezcla de $281\text{ }kg/m^3$ y una desviación estándar de $104.507\text{ }kg/m^3}$.
+Para la variable independiente "Cemento", se observa un comportamiento homogéneo y balanceado, sin valores atipicos, con un promedio de cemento en la mezcla de $281\text{ }kg/m^3$ y una desviación estándar de $104.507\text{ }kg/m^3$.
 
 El diagrama de cjas y bigotes nos indica que el 50% de las observaciones de mezclas de concreto tienen un cantidad de cemento menor o igual a $272.9\text{ }kg/m^3$, mostrando una **cercanía con el promedio**. En cuanto al rango intercuartílico, el $25\%$ de las mezclas con menor cantidad de cemento añadido registran valores iguales o inferiores a $192.3\text{ }kg/m^3$, mientras que el $75\%$ de las muestras se sitúan por debajo de los $350\text{ }kg/m^3$. Los bigotes abarcan un rango que va desde un mínimo de $102\text{ }kg/m^3$ hasta un maximo de cemento añadido de $540\text{ }kg/m^3$.
 
@@ -272,7 +271,6 @@ Sin embargo el diagrama de caja muestra que el 50% de los valores de ceniza coin
 ¿porque hay este comportamiento de los datos centrado en cero?
 esto se debe a que el conjunto de datos contiene mezclas de control convencionales elaboradas exclusivamente con cemento tradicional para servir de base comparativa. Por ende, la ceniza volante actúa como un componente opcional.
 
----
 ### Analisis boxplot tiempo de curado
 ```{r}
 p2
@@ -284,8 +282,6 @@ El boxplot nos permite observar una distribución sesgada a la derecha, tambien 
 
 **¿Por qué existen valores atípicos tan elevados?**  
 En la práctica de la ingeniería civil, los ensayos estándar de control de calidad se realizan de forma rutinaria a los $7$, $14$ y principalmente a los $28\text{ días}$. Los tiempos de curado prolongados ($> 90\text{ días}$) son ensayos de investigación concebidos para evaluar la durabilidad a largo plazo y la reacción tardía de adiciones minerales como la ceniza volante.
-
----
 
 
 ```{r}
