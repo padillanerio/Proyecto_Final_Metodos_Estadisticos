@@ -141,6 +141,30 @@ tabla_independientes <- df_clean |>
 tabla_independientes
 ```
 
+### Distribución del Contenido de Cemento
+
+```{r}
+df_clean |>
+  ggplot(aes(x = cemento)) +
+  geom_histogram(
+    aes(y = after_stat(density)),
+    binwidth = 25,
+    fill = "#1b9e77", # Tono verde esmeralda
+    color = "white",
+    alpha = 0.6
+  ) +
+  geom_density(color = "#1b9e77", linewidth = 1.2) +
+  labs(
+    title = "Distribución del Contenido de Cemento",
+    x = "Cemento (kg/m³)",
+    y = "Densidad"
+  ) +
+  theme_bw()
+```
+La dosificación de cemento presenta una distribución continua y multimodal suave, abarcando desde un mínimo de $102\text{ kg/m}^3$ hasta un máximo de $540\text{ kg/m}^3$, con una media muestral de $281.17\text{ kg/m}^3$ y una desviación estándar de $104.51\text{ kg/m}^3$. Exhibe un coeficiente de asimetría leve a moderado ($0.51$) y una curtosis de $2.48$ (platicúrtica), lo que evidencia un diseño experimental con amplia cobertura y suficiente variabilidad para evaluar mezclas con diversas proporciones aglutinantes.
+
+### Distribución del Contenido de Ceniza Volante (Fly Ash)
+
 ```{r}
 df_clean |>
   ggplot(aes(x = ceniza)) +
@@ -160,6 +184,30 @@ df_clean |>
   theme_bw()
 ```
 La distribución es fuertemente bimodal e inflada en ceros. Presenta una concentración masiva en los $0\text{ kg/m}^3$ correspondiente a las mezclas tradicionales de control ($55\%$ de la muestra), seguida de un segundo agrupamiento entre los $80$ y $160\text{ kg/m}^3$ en aquellas formulaciones donde sí se sustituyó cemento por ceniza. Esta notable asimetría y falta de continuidad confirma la **no normalidad** de la variable.
+
+### Distribución del Contenido de Agua
+
+```{r}
+df_clean |>
+  ggplot(aes(x = agua)) +
+  geom_histogram(
+    aes(y = after_stat(density)),
+    binwidth = 8,
+    fill = "#2b83ba", # Tono azul océano
+    color = "white",
+    alpha = 0.6
+  ) +
+  geom_density(color = "#2b83ba", linewidth = 1.2) +
+  labs(
+    title = "Distribución del Contenido de Agua",
+    x = "Agua (kg/m³)",
+    y = "Densidad"
+  ) +
+  theme_bw()
+```
+La cantidad de agua presenta una distribución marcadamente **simétrica y acampanada**, con un promedio de $181.57\text{ kg/m}^3$ y una dispersión acotada ($\text{DE} = 21.36\text{ kg/m}^3$). Su coeficiente de asimetría es prácticamente nulo ($0.07$) y su curtosis ($3.12$) es sumamente próxima a la de una distribución normal teórica. La gran mayoría de los ensayos se sitúan entre los $160$ y $200\text{ kg/m}^3$, rango estándar que asegura la trabajabilidad y fluidez requerida en mezclas de concreto.
+
+### Distribución del Tiempo de Curado (Edad)
 
 ```{r}
 df_clean |>
@@ -181,7 +229,7 @@ df_clean |>
 ```
 La distribución exhibe un marcado sesgo positivo con picos, concentrando la gran mayoría de las observaciones en los $28\text{ días}$ la cual es la edad estándar de diseño y en periodos tempranos ($\le 7\text{ días}$). La densidad decae drásticamente a partir de los $56\text{ días}$, extendiéndose en una cola larga hasta los $365\text{ días}$, lo cual evidencia una distribución **no normal** explicada por el diseño experimental enfocado en etapas normativas de obra.
 
-## Anlisis Univariado de las variables
+## Análisis univariado: Diagramas de caja (Boxplots)
 
 ```{r Boxplots-univariado-independientes, fig.height=12, fig.alt=12}
 # 1. Boxplot de Ceniza Volante

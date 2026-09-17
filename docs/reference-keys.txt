@@ -15,7 +15,11 @@ diccionario-de-variables
 exploración-del-data-set.
 exploración-de-la-variable-de-respuesta
 exploracion-de-las-varibles-independientes
-anlisis-univariado-de-las-variables
+distribución-del-contenido-de-cemento
+distribución-del-contenido-de-ceniza-volante-fly-ash
+distribución-del-contenido-de-agua
+distribución-del-tiempo-de-curado-edad
+análisis-univariado-diagramas-de-caja-boxplots
 analisis-boxplot-tiempo-de-curado
 análisis-bivariado-relación-con-la-resistencia-del-concreto
 análisis-multivariado
