@@ -10,18 +10,21 @@ En la industria de la construcción y la ingeniería civil, la resistencia de la
 Por tanto, el problema central radica en determinar estadísticamente: ¿En qué medida el uso de ceniza volante y el tiempo de curado influyen en la resistencia a la compresión del concreto a lo largo de sus distintas etapas de maduración?
 
 ## Objetivos del Proyecto
+
 ### Objetivo general
-Evaluar el impacto de la incorporación de ceniza volante (Fly Ash) y del tiempo de curado sobre la resistencia a la compresión del concreto, mediante análisis inferencial y pruebas de hipótesis, para determinar la viabilidad técnica y el comportamiento mecánico de estas formulaciones.
+Evaluar los factores determinantes en la resistencia a la compresión del concreto mediante análisis exploratorio, inferencia estadística (pruebas de hipótesis y ANOVA) y el ajuste de un modelo de regresión lineal, analizando el impacto de la dosificación de cemento, la adición de ceniza volante (*Fly Ash*) y el tiempo de curado.
 
-### Objetivos especificos 
+### Objetivos específicos
 
-1. Estimar los intervalos de confianza y verificar los supuestos de normalidad para la resistencia del concreto y la dosificación de ceniza volante. 
+1. **Realizar un Análisis Exploratorio de Datos (EDA)** exhaustivo para caracterizar las distribuciones, identificar patrones, detectar valores atípicos y cuantificar el grado de correlación entre las variables de la mezcla y la resistencia a la compresión.
 
-2. Comparar la resistencia media a la compresión entre mezclas con y sin ceniza volante, calculando el tamaño del efecto. 
+2. **Estimar intervalos de confianza y evaluar los supuestos de normalidad** para la resistencia a la compresión y los principales componentes dosificados.
 
-3.Evaluar las diferencias de resistencia entre las etapas de curado (temprana, estándar y tardía) mediante análisis de varianza y pruebas post-hoc.
+3. **Comparar la resistencia media a la compresión** entre mezclas convencionales (sin ceniza volante) y mezclas con sustitución de ceniza volante, aplicando pruebas de hipótesis inferenciales y calculando el tamaño del efecto.
 
-4. Determinar el grado de correlación entre la cantidad de ceniza volante dosificada y la resistencia alcanzada en el material. 
+4. **Evaluar las diferencias de resistencia mecánica a través de las etapas de curado** (temprana, estándar y tardía) mediante análisis de varianza (ANOVA) de una y dos vías con pruebas de comparaciones múltiples post-hoc.
+
+5. **Ajustar y validar un modelo de regresión lineal** para modelar y predecir la resistencia a la compresión del concreto en función del contenido de cemento (y variables con mayor fuerza asociativa), verificando la bondad de ajuste y los supuestos sobre los residuales. 
     
 ## Justificación
 

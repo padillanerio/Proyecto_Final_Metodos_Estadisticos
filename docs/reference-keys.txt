@@ -5,7 +5,7 @@ contexto
 problemática
 objetivos-del-proyecto
 objetivo-general
-objetivos-especificos
+objetivos-específicos
 justificación
 eda
 dataset-y-ficha-tecnica
