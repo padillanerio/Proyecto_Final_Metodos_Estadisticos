@@ -401,27 +401,66 @@ La ceniza volante y la resistencia del concreto presentan una correlación linea
 
 ## Análisis multivariado
 
+La matriz de correlación y dispersión permite evaluar de manera simultánea las interacciones entre los componentes de la mezcla, la edad de curado y la resistencia final.
+
 ```{r, fig.width= 13, fig.height= 13}
 df_clean |>
   ggpairs()
 ```
 
+### Hallazgos clave del análisis multivariado:
+1. **Compensación de aglutinantes:** Existen correlaciones negativas significativas entre el cemento y sus sustitutos: cemento vs ceniza ($r = -0.397$) y cemento vs escoria ($r = -0.275$). Esto refleja que en el diseño de mezclas, al incorporar ceniza volante o escoria se reduce proporcionalmente el cemento.
+2. **Efecto reductor del superplastificante:** Se observa una fuerte correlación negativa entre el agua y el superplastificante ($r = -0.657$), confirmando la eficacia de este aditivo químico para disminuir la demanda de agua.
+3. **Comportamiento no lineal del curado:** La relación entre la edad y la resistencia exhibe una desaceleración con el tiempo, sugiriendo una transformación funcional para capturar mejor su impacto.
 
-```{r}
+## Ingeniería de Características
+
+A partir de los hallazgos multivariados y los fundamentos fisicoquímicos del concreto (Ley de Abrams y reacciones puzolánicas), creamos nuevas variables derivadas que fortalecen el análisis inferencial y los modelos predictivos:
+
+```{r ingenieria-caracteristicas}
 df_fe <- df_clean |>
   mutate(
-    #  Razón Agua / Cementante(lo que endurece)
-    razon_agua_cementante = agua / (cemento + ceniza),
+    # 1. Total de aglutinantes activos (kg/m^3)
+    total_cementante = cemento + escoria + ceniza,
 
-    #  Porcentaje de Cemento sustituido por Ceniza
-    pct_ceniza = (ceniza / (cemento + ceniza)) * 100,
+    # 2. Relación Agua/Cementante total (Ley de Abrams)
+    razon_agua_cementante = agua / total_cementante,
 
-    # Etapas estándar de curado
+    # 3. Transformación logarítmica de la edad de curado
+    log_edad = log(edad),
+
+    # 4. Porcentajes de sustitución relativa (%)
+    pct_ceniza  = (ceniza / total_cementante) * 100,
+    pct_escoria = (escoria / total_cementante) * 100,
+
+    # 5. Factores categóricos binarios para pruebas de hipótesis
+    tiene_ceniza  = factor(ifelse(ceniza > 0, "Con Ceniza", "Sin Ceniza"),
+                           levels = c("Sin Ceniza", "Con Ceniza")),
+    tiene_escoria = factor(ifelse(escoria > 0, "Con Escoria", "Sin Escoria"),
+                           levels = c("Sin Escoria", "Con Escoria")),
+
+    # 6. Factor ordinal por etapas estándar de curado
     etapa_curado = factor(case_when(
       edad <= 7 ~ "Temprano (<= 7d)",
-      edad > 7 & edad <= 28 ~ "estandar (14-28d)",
-      edad > 28 ~ "Tardio (> 28d)"
-    ), levels = c("Temprano (<= 7d)", "estandar (14-28d)", "Tardio (> 28d)"))
+      edad > 7 & edad <= 28 ~ "Estándar (14-28d)",
+      edad > 28 ~ "Tardío (> 28d)"
+    ), levels = c("Temprano (<= 7d)", "Estándar (14-28d)", "Tardío (> 28d)"))
   )
 ```
+
+### Correlación de las nuevas variables con la Resistencia
+
+Comparamos la fuerza de asociación lineal de las nuevas variables con la variable respuesta:
+
+```{r tabla-correlaciones-fe}
+df_fe %>%
+  select(resistencia, cemento, total_cementante, agua, razon_agua_cementante, edad, log_edad, pct_ceniza) %>%
+  cor() %>%
+  round(3) %>%
+  as.data.frame() %>%
+  select(Resistencia = resistencia)
+```
+
+Como se aprecia, la **razón agua/cementante** ($r = -0.623$) y el **total de cementante** ($r = +0.613$) se consolidan como los predictores más potentes de la resistencia, mientras que $\log(\text{edad})$ ($r = +0.552$) supera considerablemente a la edad en escala lineal ($r = +0.329$).
+
 

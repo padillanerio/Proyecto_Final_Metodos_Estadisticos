@@ -178,7 +178,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.7.1" data-path="eda.html"><a href="eda.html#analisis-boxplot-tiempo-de-curado"><i class="fa fa-check"></i><b>3.7.1</b> Analisis boxplot tiempo de curado</a></li>
 </ul></li>
 <li class="chapter" data-level="3.8" data-path="eda.html"><a href="eda.html#an%C3%A1lisis-bivariado-relaci%C3%B3n-con-la-resistencia-del-concreto"><i class="fa fa-check"></i><b>3.8</b> Análisis bivariado: relación con la resistencia del concreto</a></li>
-<li class="chapter" data-level="3.9" data-path="eda.html"><a href="eda.html#an%C3%A1lisis-multivariado"><i class="fa fa-check"></i><b>3.9</b> Análisis multivariado</a></li>
+<li class="chapter" data-level="3.9" data-path="eda.html"><a href="eda.html#an%C3%A1lisis-multivariado"><i class="fa fa-check"></i><b>3.9</b> Análisis multivariado</a>
+<ul>
+<li class="chapter" data-level="3.9.1" data-path="eda.html"><a href="eda.html#hallazgos-clave-del-an%C3%A1lisis-multivariado"><i class="fa fa-check"></i><b>3.9.1</b> Hallazgos clave del análisis multivariado:</a></li>
+</ul></li>
+<li class="chapter" data-level="3.10" data-path="eda.html"><a href="eda.html#ingenier%C3%ADa-de-caracter%C3%ADsticas"><i class="fa fa-check"></i><b>3.10</b> Ingeniería de Características</a>
+<ul>
+<li class="chapter" data-level="3.10.1" data-path="eda.html"><a href="eda.html#correlaci%C3%B3n-de-las-nuevas-variables-con-la-resistencia"><i class="fa fa-check"></i><b>3.10.1</b> Correlación de las nuevas variables con la Resistencia</a></li>
+</ul></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Publicado con Bookdown</a></li>
@@ -630,25 +637,71 @@ En la práctica de la ingeniería civil, los ensayos estándar de control de cal
 </div>
 <div id="análisis-multivariado" class="section level2 hasAnchor" number="3.9">
 <h2><span class="header-section-number">3.9</span> Análisis multivariado<a href="eda.html#an%C3%A1lisis-multivariado" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>La matriz de correlación y dispersión permite evaluar de manera simultánea las interacciones entre los componentes de la mezcla, la edad de curado y la resistencia final.</p>
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="eda.html#cb23-1" tabindex="-1"></a>df_clean <span class="sc">|&gt;</span></span>
 <span id="cb23-2"><a href="eda.html#cb23-2" tabindex="-1"></a>  <span class="fu">ggpairs</span>()</span></code></pre></div>
 <p><img src="Proyecto_Final_Metodos_Estadisticos_files/figure-html/unnamed-chunk-16-1.png" alt="" width="1248" style="display: block; margin: auto;" /></p>
+<div id="hallazgos-clave-del-análisis-multivariado" class="section level3 hasAnchor" number="3.9.1">
+<h3><span class="header-section-number">3.9.1</span> Hallazgos clave del análisis multivariado:<a href="eda.html#hallazgos-clave-del-an%C3%A1lisis-multivariado" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ol style="list-style-type: decimal">
+<li><strong>Compensación de aglutinantes:</strong> Existen correlaciones negativas significativas entre el cemento y sus sustitutos: cemento vs ceniza (<span class="math inline">\(r = -0.397\)</span>) y cemento vs escoria (<span class="math inline">\(r = -0.275\)</span>). Esto refleja que en el diseño de mezclas, al incorporar ceniza volante o escoria se reduce proporcionalmente el cemento.</li>
+<li><strong>Efecto reductor del superplastificante:</strong> Se observa una fuerte correlación negativa entre el agua y el superplastificante (<span class="math inline">\(r = -0.657\)</span>), confirmando la eficacia de este aditivo químico para disminuir la demanda de agua.</li>
+<li><strong>Comportamiento no lineal del curado:</strong> La relación entre la edad y la resistencia exhibe una desaceleración con el tiempo, sugiriendo una transformación funcional para capturar mejor su impacto.</li>
+</ol>
+</div>
+</div>
+<div id="ingeniería-de-características" class="section level2 hasAnchor" number="3.10">
+<h2><span class="header-section-number">3.10</span> Ingeniería de Características<a href="eda.html#ingenier%C3%ADa-de-caracter%C3%ADsticas" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>A partir de los hallazgos multivariados y los fundamentos fisicoquímicos del concreto (Ley de Abrams y reacciones puzolánicas), creamos nuevas variables derivadas que fortalecen el análisis inferencial y los modelos predictivos:</p>
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="eda.html#cb24-1" tabindex="-1"></a>df_fe <span class="ot">&lt;-</span> df_clean <span class="sc">|&gt;</span></span>
 <span id="cb24-2"><a href="eda.html#cb24-2" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb24-3"><a href="eda.html#cb24-3" tabindex="-1"></a>    <span class="co">#  Razón Agua / Cementante(lo que endurece)</span></span>
-<span id="cb24-4"><a href="eda.html#cb24-4" tabindex="-1"></a>    <span class="at">razon_agua_cementante =</span> agua <span class="sc">/</span> (cemento <span class="sc">+</span> ceniza),</span>
+<span id="cb24-3"><a href="eda.html#cb24-3" tabindex="-1"></a>    <span class="co"># 1. Total de aglutinantes activos (kg/m^3)</span></span>
+<span id="cb24-4"><a href="eda.html#cb24-4" tabindex="-1"></a>    <span class="at">total_cementante =</span> cemento <span class="sc">+</span> escoria <span class="sc">+</span> ceniza,</span>
 <span id="cb24-5"><a href="eda.html#cb24-5" tabindex="-1"></a></span>
-<span id="cb24-6"><a href="eda.html#cb24-6" tabindex="-1"></a>    <span class="co">#  Porcentaje de Cemento sustituido por Ceniza</span></span>
-<span id="cb24-7"><a href="eda.html#cb24-7" tabindex="-1"></a>    <span class="at">pct_ceniza =</span> (ceniza <span class="sc">/</span> (cemento <span class="sc">+</span> ceniza)) <span class="sc">*</span> <span class="dv">100</span>,</span>
+<span id="cb24-6"><a href="eda.html#cb24-6" tabindex="-1"></a>    <span class="co"># 2. Relación Agua/Cementante total (Ley de Abrams)</span></span>
+<span id="cb24-7"><a href="eda.html#cb24-7" tabindex="-1"></a>    <span class="at">razon_agua_cementante =</span> agua <span class="sc">/</span> total_cementante,</span>
 <span id="cb24-8"><a href="eda.html#cb24-8" tabindex="-1"></a></span>
-<span id="cb24-9"><a href="eda.html#cb24-9" tabindex="-1"></a>    <span class="co"># Etapas estándar de curado</span></span>
-<span id="cb24-10"><a href="eda.html#cb24-10" tabindex="-1"></a>    <span class="at">etapa_curado =</span> <span class="fu">factor</span>(<span class="fu">case_when</span>(</span>
-<span id="cb24-11"><a href="eda.html#cb24-11" tabindex="-1"></a>      edad <span class="sc">&lt;=</span> <span class="dv">7</span> <span class="sc">~</span> <span class="st">&quot;Temprano (&lt;= 7d)&quot;</span>,</span>
-<span id="cb24-12"><a href="eda.html#cb24-12" tabindex="-1"></a>      edad <span class="sc">&gt;</span> <span class="dv">7</span> <span class="sc">&amp;</span> edad <span class="sc">&lt;=</span> <span class="dv">28</span> <span class="sc">~</span> <span class="st">&quot;estandar (14-28d)&quot;</span>,</span>
-<span id="cb24-13"><a href="eda.html#cb24-13" tabindex="-1"></a>      edad <span class="sc">&gt;</span> <span class="dv">28</span> <span class="sc">~</span> <span class="st">&quot;Tardio (&gt; 28d)&quot;</span></span>
-<span id="cb24-14"><a href="eda.html#cb24-14" tabindex="-1"></a>    ), <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Temprano (&lt;= 7d)&quot;</span>, <span class="st">&quot;estandar (14-28d)&quot;</span>, <span class="st">&quot;Tardio (&gt; 28d)&quot;</span>))</span>
-<span id="cb24-15"><a href="eda.html#cb24-15" tabindex="-1"></a>  )</span></code></pre></div>
+<span id="cb24-9"><a href="eda.html#cb24-9" tabindex="-1"></a>    <span class="co"># 3. Transformación logarítmica de la edad de curado</span></span>
+<span id="cb24-10"><a href="eda.html#cb24-10" tabindex="-1"></a>    <span class="at">log_edad =</span> <span class="fu">log</span>(edad),</span>
+<span id="cb24-11"><a href="eda.html#cb24-11" tabindex="-1"></a></span>
+<span id="cb24-12"><a href="eda.html#cb24-12" tabindex="-1"></a>    <span class="co"># 4. Porcentajes de sustitución relativa (%)</span></span>
+<span id="cb24-13"><a href="eda.html#cb24-13" tabindex="-1"></a>    <span class="at">pct_ceniza  =</span> (ceniza <span class="sc">/</span> total_cementante) <span class="sc">*</span> <span class="dv">100</span>,</span>
+<span id="cb24-14"><a href="eda.html#cb24-14" tabindex="-1"></a>    <span class="at">pct_escoria =</span> (escoria <span class="sc">/</span> total_cementante) <span class="sc">*</span> <span class="dv">100</span>,</span>
+<span id="cb24-15"><a href="eda.html#cb24-15" tabindex="-1"></a></span>
+<span id="cb24-16"><a href="eda.html#cb24-16" tabindex="-1"></a>    <span class="co"># 5. Factores categóricos binarios para pruebas de hipótesis</span></span>
+<span id="cb24-17"><a href="eda.html#cb24-17" tabindex="-1"></a>    <span class="at">tiene_ceniza  =</span> <span class="fu">factor</span>(<span class="fu">ifelse</span>(ceniza <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="st">&quot;Con Ceniza&quot;</span>, <span class="st">&quot;Sin Ceniza&quot;</span>),</span>
+<span id="cb24-18"><a href="eda.html#cb24-18" tabindex="-1"></a>                           <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Sin Ceniza&quot;</span>, <span class="st">&quot;Con Ceniza&quot;</span>)),</span>
+<span id="cb24-19"><a href="eda.html#cb24-19" tabindex="-1"></a>    <span class="at">tiene_escoria =</span> <span class="fu">factor</span>(<span class="fu">ifelse</span>(escoria <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="st">&quot;Con Escoria&quot;</span>, <span class="st">&quot;Sin Escoria&quot;</span>),</span>
+<span id="cb24-20"><a href="eda.html#cb24-20" tabindex="-1"></a>                           <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Sin Escoria&quot;</span>, <span class="st">&quot;Con Escoria&quot;</span>)),</span>
+<span id="cb24-21"><a href="eda.html#cb24-21" tabindex="-1"></a></span>
+<span id="cb24-22"><a href="eda.html#cb24-22" tabindex="-1"></a>    <span class="co"># 6. Factor ordinal por etapas estándar de curado</span></span>
+<span id="cb24-23"><a href="eda.html#cb24-23" tabindex="-1"></a>    <span class="at">etapa_curado =</span> <span class="fu">factor</span>(<span class="fu">case_when</span>(</span>
+<span id="cb24-24"><a href="eda.html#cb24-24" tabindex="-1"></a>      edad <span class="sc">&lt;=</span> <span class="dv">7</span> <span class="sc">~</span> <span class="st">&quot;Temprano (&lt;= 7d)&quot;</span>,</span>
+<span id="cb24-25"><a href="eda.html#cb24-25" tabindex="-1"></a>      edad <span class="sc">&gt;</span> <span class="dv">7</span> <span class="sc">&amp;</span> edad <span class="sc">&lt;=</span> <span class="dv">28</span> <span class="sc">~</span> <span class="st">&quot;Estándar (14-28d)&quot;</span>,</span>
+<span id="cb24-26"><a href="eda.html#cb24-26" tabindex="-1"></a>      edad <span class="sc">&gt;</span> <span class="dv">28</span> <span class="sc">~</span> <span class="st">&quot;Tardío (&gt; 28d)&quot;</span></span>
+<span id="cb24-27"><a href="eda.html#cb24-27" tabindex="-1"></a>    ), <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Temprano (&lt;= 7d)&quot;</span>, <span class="st">&quot;Estándar (14-28d)&quot;</span>, <span class="st">&quot;Tardío (&gt; 28d)&quot;</span>))</span>
+<span id="cb24-28"><a href="eda.html#cb24-28" tabindex="-1"></a>  )</span></code></pre></div>
+<div id="correlación-de-las-nuevas-variables-con-la-resistencia" class="section level3 hasAnchor" number="3.10.1">
+<h3><span class="header-section-number">3.10.1</span> Correlación de las nuevas variables con la Resistencia<a href="eda.html#correlaci%C3%B3n-de-las-nuevas-variables-con-la-resistencia" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Comparamos la fuerza de asociación lineal de las nuevas variables con la variable respuesta:</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="eda.html#cb25-1" tabindex="-1"></a>df_fe <span class="sc">%&gt;%</span></span>
+<span id="cb25-2"><a href="eda.html#cb25-2" tabindex="-1"></a>  <span class="fu">select</span>(resistencia, cemento, total_cementante, agua, razon_agua_cementante, edad, log_edad, pct_ceniza) <span class="sc">%&gt;%</span></span>
+<span id="cb25-3"><a href="eda.html#cb25-3" tabindex="-1"></a>  <span class="fu">cor</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb25-4"><a href="eda.html#cb25-4" tabindex="-1"></a>  <span class="fu">round</span>(<span class="dv">3</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb25-5"><a href="eda.html#cb25-5" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb25-6"><a href="eda.html#cb25-6" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">Resistencia =</span> resistencia)</span></code></pre></div>
+<pre><code>##                       Resistencia
+## resistencia                 1.000
+## cemento                     0.498
+## total_cementante            0.613
+## agua                       -0.290
+## razon_agua_cementante      -0.623
+## edad                        0.329
+## log_edad                    0.552
+## pct_ceniza                 -0.163</code></pre>
+<p>Como se aprecia, la <strong>razón agua/cementante</strong> (<span class="math inline">\(r = -0.623\)</span>) y el <strong>total de cementante</strong> (<span class="math inline">\(r = +0.613\)</span>) se consolidan como los predictores más potentes de la resistencia, mientras que <span class="math inline">\(\log(\text{edad})\)</span> (<span class="math inline">\(r = +0.552\)</span>) supera considerablemente a la edad en escala lineal (<span class="math inline">\(r = +0.329\)</span>).</p>
 
+</div>
 </div>
 </div>
             </section>

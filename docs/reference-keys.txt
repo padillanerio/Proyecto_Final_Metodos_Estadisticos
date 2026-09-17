@@ -23,3 +23,6 @@ análisis-univariado-diagramas-de-caja-boxplots
 analisis-boxplot-tiempo-de-curado
 análisis-bivariado-relación-con-la-resistencia-del-concreto
 análisis-multivariado
+hallazgos-clave-del-análisis-multivariado
+ingeniería-de-características
+correlación-de-las-nuevas-variables-con-la-resistencia
